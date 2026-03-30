@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Water Tank Problem</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <h1>Water Tank Problem</h1>
+    <p class="subtitle">Compute units of water trapped between blocks</p>
+
+    <div class="input-section">
+      <input
+        type="text"
+        id="heightInput"
+        placeholder="e.g. 0,4,0,0,0,6,0,6,4,0"
+        value="0,4,0,0,0,6,0,6,4,0"
+      />
+      <button id="computeBtn">Compute</button>
+    </div>
+
+    <div class="error" id="error"></div>
+    <div class="result" id="result"></div>
+
+    <div id="visualization"></div>
+
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-swatch legend-swatch-block"></div>
+        Block
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch legend-swatch-water"></div>
+        Water
+      </div>
+    </div>
+
+    <script src="water-tank-algorithm.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
