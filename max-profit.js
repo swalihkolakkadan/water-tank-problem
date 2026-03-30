@@ -8,8 +8,9 @@
  *
  * Theatre beats Pub when n > 7. Proof: 1500(n-5) > 1000(n-4) => n > 7.
  * At n = 7 they tie. Below n = 7 only Pub is worth building.
- * However since multiple combinations can hit the same max earnings,
- * we use DP to find the max and trace back all valid solutions.
+ * Since multiple combinations can hit the same max earnings, we use DP
+ * to find the max and trace back all valid solutions.
+ * Buildings that finish exactly at n are excluded as they earn nothing.
  *
  * Time complexity: O(n) | Space complexity: O(n)
  */
@@ -78,6 +79,7 @@ const buildings = [
 /**
  * Approach 3 - DP (finds all solutions, linear time):
  * Build dp[t] = max earnings from timeUsed t onwards.
+ * Only consider buildings that finish strictly before n (earn > 0).
  * Track which buildings led to the max at each t, then trace back all paths.
  * Time complexity: O(n) | Space complexity: O(n)
  */
@@ -88,7 +90,7 @@ const maxProfit = (n) => {
   for (let t = n - 1; t >= 0; t--) {
     let best = 0;
 
-    if (t + 5 <= n) {
+    if (t + 5 < n) {
       const earn = 1500 * (n - t - 5) + dp[t + 5];
       if (earn > best) {
         best = earn;
@@ -96,7 +98,7 @@ const maxProfit = (n) => {
       } else if (earn === best) choices[t].push("T");
     }
 
-    if (t + 4 <= n) {
+    if (t + 4 < n) {
       const earn = 1000 * (n - t - 4) + dp[t + 4];
       if (earn > best) {
         best = earn;
