@@ -16,6 +16,8 @@
  */
 
 const buildings = [
+  { name: "M", buildTime: 15, rate: 15000 },
+  { name: "C", buildTime: 10, rate: 2000 },
   { name: "T", buildTime: 5, rate: 1500 },
   { name: "P", buildTime: 4, rate: 1000 },
 ];
@@ -89,23 +91,19 @@ const maxProfit = (n) => {
 
   for (let t = n - 1; t >= 0; t--) {
     let best = 0;
-
-    if (t + 5 < n) {
-      const earn = 1500 * (n - t - 5) + dp[t + 5];
-      if (earn > best) {
-        best = earn;
-        choices[t] = ["T"];
-      } else if (earn === best) choices[t].push("T");
+    let bestChoices = [];
+    for (const b of buildings) {
+      if (t + b.buildTime < n) {
+        const earn = b.rate * (n - t - b.buildTime) + dp[t + b.buildTime];
+        if (earn > best) {
+          best = earn;
+          bestChoices = [b.name];
+        } else if (earn === best && earn > 0) {
+          bestChoices.push(b.name);
+        }
+      }
     }
-
-    if (t + 4 < n) {
-      const earn = 1000 * (n - t - 4) + dp[t + 4];
-      if (earn > best) {
-        best = earn;
-        choices[t] = ["P"];
-      } else if (earn === best) choices[t].push("P");
-    }
-
+    choices[t] = bestChoices;
     dp[t] = best;
   }
 
@@ -113,26 +111,29 @@ const maxProfit = (n) => {
 
   const trace = (t, counts) => {
     if (choices[t].length === 0) {
-      solutions.add(JSON.stringify({ T: counts.T, P: counts.P }));
+      solutions.add(
+        JSON.stringify({ T: counts.T, P: counts.P, C: counts.C, M: counts.M }),
+      );
       return;
     }
     for (const b of choices[t]) {
-      const next = b === "T" ? t + 5 : t + 4;
+      const bld = buildings.find((x) => x.name === b);
+      const next = t + bld.buildTime;
       trace(next, {
-        T: counts.T + (b === "T" ? 1 : 0),
-        P: counts.P + (b === "P" ? 1 : 0),
+        ...counts,
+        [b]: counts[b] + 1,
       });
     }
   };
 
-  trace(0, { T: 0, P: 0 });
+  trace(0, { T: 0, P: 0, C: 0, M: 0 });
 
   console.log(`Input: Time Unit ${n}`);
   console.log(`Earnings: $${dp[0]}`);
   console.log(`Solutions:`);
   [...solutions].forEach((s, i) => {
-    const { T, P } = JSON.parse(s);
-    console.log(`  ${i + 1}. T: ${T} P: ${P} C: 0`);
+    const { T, P, C, M } = JSON.parse(s);
+    console.log(`  ${i + 1}. T: ${T} P: ${P} C: ${C} M: ${M}`);
   });
 };
 
